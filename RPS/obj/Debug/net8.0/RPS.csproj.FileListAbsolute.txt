@@ -1,0 +1,15 @@
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\bin\Debug\net8.0\RPS.exe
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\bin\Debug\net8.0\RPS.deps.json
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\bin\Debug\net8.0\RPS.runtimeconfig.json
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\bin\Debug\net8.0\RPS.dll
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\bin\Debug\net8.0\RPS.pdb
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.AssemblyInfoInputs.cache
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.AssemblyInfo.cs
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.csproj.CoreCompileInputs.cache
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.sourcelink.json
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.dll
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\refint\RPS.dll
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.pdb
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\RPS.genruntimeconfig.cache
+C:\Users\Rylan\Desktop\training\Rylan-Mattocks\RPS\obj\Debug\net8.0\ref\RPS.dll
