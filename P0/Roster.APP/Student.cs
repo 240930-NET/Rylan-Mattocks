@@ -29,7 +29,7 @@ public class Student : Person{
     }
 
     public void displayStudent(){
-        if (classes.Any()) Console.WriteLine($"\n{firstName} {lastName} is {age}.\nThey are enrolled in {classes.Count} classes.");
+        if (classes.Any()) Console.WriteLine($"\n{firstName} {lastName} is {age}.\nTheir studentID is {id}.\nThey are enrolled in {classes.Count} classes.");
         else Console.WriteLine($"\n{firstName} {lastName} is {age}.\nThey are not enrolled in any classes!");
     }
 
