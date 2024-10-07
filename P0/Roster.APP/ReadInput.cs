@@ -1,9 +1,34 @@
 namespace Roster.APP;
 
-public class Input{
+public class ReadInput{
     // Get the input from the user and check if valid
 
+    public static string GetUserInput(){
+        string? userInput = Console.ReadLine();
+        return InputValidation.CheckString(userInput);
+    }
+
+    public static string GetUserInt(){
+        string? userInput = Console.ReadLine();
+        return InputValidation.CheckInt(userInput);
+    }
+
+    public static string GetUserInput(List<string> options){
+        string? userInput = Console.ReadLine();
+        string checkedString = InputValidation.CheckString(userInput);
+        if (!options.Contains(checkedString)) Console.WriteLine(checkedString);
+        return checkedString;
+    }
+
+
+
+
+
+
+
+
     public static string getUserInput(string message){
+
         Console.WriteLine("\n" + message);
         string? userInput = Console.ReadLine();
         checkExit(userInput);
@@ -79,7 +104,6 @@ public class Input{
         catch(Exception)
         {
             Console.WriteLine($"\nInvalid Response: \'{strAge}\'. Please try again!");
-            getAge();
             return getAge();
         }
     }

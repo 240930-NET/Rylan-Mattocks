@@ -139,19 +139,21 @@ public class Menu{
             return 0;
         }
     }
-    public static int getStudentMenu(Tuple<string, string> userName, List<Person> people){
+    public static int getStudentMenu(Tuple<string, string> userName, List<Person> people, int userID){
         Person user = new Student();
         foreach(Person person in people){
-            if (person.firstName == userName.Item1 && person.lastName == person.lastName){
-                if (person is Student newS){
-                    user = newS;
-                    break;
+            if (person is Student student){
+                if (student.firstName == userName.Item1 && student.lastName == person.lastName && userID == student.id){
+                    if (person is Student newS){
+                        user = newS;
+                        break;
+                    }
+                    else{
+                        Console.WriteLine("\nThe user exists but is not a student!\n");
+                        return -2;
+                    }
                 }
-                else{
-                    Console.WriteLine("\nThe user exists but is not a student!\n");
-                    return -2;
-                }
-            }
+            } 
         }
         if (String.IsNullOrEmpty(user.firstName)){
             Console.WriteLine($"\nSorry {userName.Item1}, it looks like you aren't in our system.\n" + 

@@ -95,7 +95,7 @@ public class Logic{
             if (updatedStudent is Student uStudent){
                 newS.firstName = uStudent.firstName;
                 newS.lastName = uStudent.lastName;
-                newS.age = uStudent.age;
+                newS.Age = uStudent.Age;
                 Console.WriteLine($"\n{newS.firstName} {newS.lastName} created!");
             }
         }
@@ -111,7 +111,7 @@ public class Logic{
                 if (updatedStudent is Student uStudent){
                     newS.firstName = uStudent.firstName;
                     newS.lastName = uStudent.lastName;
-                    newS.age = uStudent.age;
+                    newS.Age = uStudent.Age;
                     Console.WriteLine($"\n{newS.firstName} {newS.lastName} updated!");
                 }
             }
@@ -126,7 +126,7 @@ public class Logic{
             if (updatedTeacher is Teacher uTeach){
                 newT.firstName = uTeach.firstName;
                 newT.lastName = uTeach.lastName;
-                newT.age = uTeach.age;
+                newT.Age = uTeach.Age;
                 newT.subject = uTeach.subject;
                 Console.WriteLine("\nInfo updated!\nPlease login again.");
             }

@@ -18,16 +18,13 @@ class Program
         Tuple<Tuple<string,string>, int> loginInfo;
 
         do {
-
             switch(currentMenu){
                 case -1:
-                    Menu.getGreeting();
+                    MainMenu.PrintGreeting();
                     currentMenu++;
                     break;
                 case 0:
-                    loginInfo = Menu.getUserType();
-                    userName = loginInfo.Item1;
-                    currentMenu = loginInfo.Item2;
+                    currentMenu = MainMenu.StartMenu();
                     break;
                 case 1:
                     currentMenu += Menu.getTeacherMenu(userName, people);

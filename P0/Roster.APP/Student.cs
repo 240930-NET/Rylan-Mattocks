@@ -1,36 +1,35 @@
 namespace Roster.APP;
 
 public class Student : Person{
-    public List<string> classes {get; set;} = [];
-    public int id {get; set; }
-    public static int nextID {get; set;} = 0;
+    public List<string> Classes {get; set;} = [];
     public Student(){}
     public Student(string fName, string lName, int age){
-        firstName = fName;
-        lastName = lName;
-        this.age = age;
-        this.id = nextID;
-        nextID++;
+        FirstName = fName;
+        LastName = lName;
+        this.Age = age;
+        this.UserID = NextID;
+        NextID++;
     }
 
-    public void addClass(string subject){
-        if (classes.Contains(subject)) Console.WriteLine($"\n{subject} already exists!");
-        else classes.Add(Cleaner.Upper(Cleaner.Clean(subject)));
+    public void AddClass(string subject){
+        if (this.Classes.Contains(subject)) Console.WriteLine($"\n{subject} already exists!");
+        else this.Classes.Add(Cleaner.Upper(Cleaner.Clean(subject)));
     }
 
-    public void displayClasses(){
-        if (classes.Any()){
+    public void DisplayClasses(){
+        if (this.Classes.Count != 0)
+        {
             Console.WriteLine();
-            foreach(string subject in classes){
+            foreach(string subject in this.Classes){
                 Console.WriteLine($"You are enrolled in {subject}!");
             }
         }
         else Console.WriteLine("\nYou are not enrolled in any classes!");
     }
 
-    public void displayStudent(){
-        if (classes.Any()) Console.WriteLine($"\n{firstName} {lastName} is {age}.\nTheir studentID is {id}.\nThey are enrolled in {classes.Count} classes.");
-        else Console.WriteLine($"\n{firstName} {lastName} is {age}.\nThey are not enrolled in any classes!");
+    public void DisplayStudent(){
+        if (Classes.Count != 0) Console.WriteLine($"\n{this.FirstName} {this.LastName} is {this.Age}.\nTheir studentID is {this.UserID}.\nThey are enrolled in {this.Classes.Count} classes.");
+        else Console.WriteLine($"\n{this.FirstName} {this.LastName} is {this.Age}.\nThey are not enrolled in any classes!");
     }
 
 }
