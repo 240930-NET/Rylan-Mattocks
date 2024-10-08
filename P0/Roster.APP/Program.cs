@@ -4,18 +4,10 @@ class Program
     static void Main(string[] args)
     {
 
-        int highId = -1;
-        List<Person> people = Data.GetPeople();
-        foreach (Person person in people){
-            if (person is Student student){
-                highId = Math.Max(highId, student.id);
-            }
-        }
-        Student.nextID = ++highId;
-
-        Tuple<string,string> userName = Tuple.Create("","");
+        Data.SetPeople();
         int currentMenu = -1;
-        Tuple<Tuple<string,string>, int> loginInfo;
+        Person tmp = new Teacher();
+        Tuple<int, Person> userInfo = Tuple.Create(currentMenu, tmp);
 
         do {
             switch(currentMenu){
@@ -24,13 +16,14 @@ class Program
                     currentMenu++;
                     break;
                 case 0:
-                    currentMenu = MainMenu.StartMenu();
+                    userInfo = MainMenu.GetUserType();
+                    currentMenu += userInfo.Item1;
                     break;
                 case 1:
-                    currentMenu += Menu.getTeacherMenu(userName, people);
+                    currentMenu += TeacherMenu.Menu(userInfo.Item2);
                     break;
                 case 2:
-                    currentMenu += Menu.getStudentMenu(userName, people);
+                    currentMenu += StudentMenu.Menu(userInfo.Item2);
                     break;
                 default:
                     Environment.Exit(0);

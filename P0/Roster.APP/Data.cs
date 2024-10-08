@@ -3,9 +3,11 @@ namespace Roster.APP;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
-public static class Data{
+public class Data{
 
-    public static async Task saveStudents(List<Student> students){
+    public static List<Person> People {get; set; } = [];
+
+    public static async Task SaveStudentsToJson(List<Student> students){
 
         string studentList = JsonSerializer.Serialize(students);
 
@@ -19,7 +21,7 @@ public static class Data{
         }
     }
 
-    public static async Task saveTeachers(List<Teacher> teachers){
+    public static async Task SaveTeachersToJson(List<Teacher> teachers){
 
         string teacherList = JsonSerializer.Serialize(teachers);
 
@@ -33,7 +35,7 @@ public static class Data{
         }
     }
 
-    public static List<Student> getStudents(){
+    public static List<Student> GetStudentsFromJson(){
         try {
             using(StreamReader sr = File.OpenText("files/students.txt")){
                 string jstring = sr.ReadToEnd();
@@ -47,7 +49,7 @@ public static class Data{
         }
     }
 
-    public static List<Teacher> getTeachers(){
+    public static List<Teacher> GetTeachersFromJson(){
         try {
             using(StreamReader sr = File.OpenText("files/teachers.txt")){
                 string jstring = sr.ReadToEnd();
@@ -60,14 +62,42 @@ public static class Data{
             return [];
         }
     }
-    public static List<Person> GetPeople(){
-        List<Person> people = [];
-        foreach (Student s in getStudents()){
-            people.Add(s);
+    public static void SetPeople(){
+        foreach (Student s in GetStudentsFromJson()){
+            Data.People.Add(s);
         }
-        foreach (Teacher t in getTeachers()){
-            people.Add(t);
+        foreach (Teacher t in GetTeachersFromJson()){
+            Data.People.Add(t);
         }
-        return people;
+    }
+
+    public static void AddPeople(Person person){
+        Data.People.Add(person);
+    }
+
+    public static void RemovePerson(Person person){
+        Data.People.Remove(person);
+    }
+
+    public static void SaveData(){
+        List<Student> saveStudents = [];
+        List<Teacher> saveTeachers = [];
+        foreach (Person person in Data.People){
+            if (person is Student student)
+                saveStudents.Add(student);
+            if (person is Teacher teacher){
+                saveTeachers.Add(teacher);
+            }
+        }
+        _ = SaveStudentsToJson(saveStudents);
+        _ = SaveTeachersToJson(saveTeachers);
+    }
+
+    public static int GetID(){
+        int highID = -1;
+        foreach (Person person in Data.People){
+            highID = Math.Max(highID, person.UserID);
+        }
+        return highID;
     }
 }

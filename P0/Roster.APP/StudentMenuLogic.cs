@@ -1,43 +1,88 @@
+using System.ComponentModel.Design;
+using System.Security.Cryptography.X509Certificates;
 using Roster.APP;
 
 public static class StudentMenuLogic{
-    private static readonly List<string> options = [
-            "1", "view",
-            "2", "add",
-            "3", "remove",
-            "4", "edit",
-            "5", $"view {0}",
-            "6", "update",
-            "7", "delete",
-            "9", "back",
-            "0", "save",
+    private static List<string> Options = [
+            "1", "View",
+            "2", "Add",
+            "3", "Remove",
+            "4", "Edit",
+            "5", "{0}",
+            "6", "Update",
+            "7", "Delete",
+            "9", "Back",
+            "0", "Save",
         ];
-    private static readonly string NeedAge = $"\n It looks like you aren't in our system {0} {1}.\nLets get you added!";
-    private static readonly string NotInSystem = $"\n I'm sorry {0} {1}, but we couldn't find you in our system!\n Please input your age and we will get you added: ";
-    private static readonly string WrongID = $"\n No Problem {0} {1}. Please try logging in again!";
+    private static readonly string AddClass = "\nType the class you would like to add: ";
+    private static readonly string RemoveClass = "\nType the class you would like to remove: ";
+    private static readonly string EditClass = "\nType the class you would like to edit: ";
+    private static readonly string NewClass = "\nType the new class: ";
+    private static readonly string NewInfo = "\nType in your new info: ";
 
-    public static int GetUserOption(string userInput){
-        if (userInput == options[0] || userInput == options[1]) return 0;
-        else if (userInput == options[2] || userInput == options[3]) return 0;
-        else if (userInput == options[4] || userInput == options[5]) return 0;
-        else if (userInput == options[6] || userInput == options[7]) return 0;
-        else if (userInput == options[8] || userInput == options[9]) return 0;
-        else if (userInput == options[10] || userInput == options[11]) return 0; // might have to make -1
-        else if (userInput == options[12] || userInput == options[13]) return -1;
-        else if (userInput == options[14] || userInput == options[15]) return -1;
-        else if (userInput == options[16] || userInput == options[17]) return 0;
-        else return 0;
-    }
-
-    public static Student VerifyUser(string firstName, string lastName, List<Person> people){
-        if (PersonLogic.CheckPerson(firstName, lastName, people)){
-            int userID = PersonLogic.GetPersonID();
-            Student? userCheck = PersonLogic.CheckStudent(userID, people);
-            VerifyStudent();
+    public static int GetUserOption(Student student){
+        object[] formatStrings = [student.FirstName!];
+        Options[9] = String.Format(Options[9], formatStrings);
+        string userInput = ReadInput.GetUserInput(Options);
+        if (userInput == Options[0] || userInput == Options[1]){
+            student.DisplayClasses();
+            return 0;
         }
-    }
-    
-    public static bool VerifyStudent(){
-        
+        else if (userInput == Options[2] || userInput == Options[3]) {
+            Console.WriteLine(AddClass);
+            student.AddClass(ReadInput.GetUserInput());
+            return 0;
+        }
+        else if (userInput == Options[4] || userInput == Options[5]) {
+            Console.WriteLine(RemoveClass);
+            student.RemoveClass(ReadInput.GetUserInput());
+            return 0;
+        }
+        else if (userInput == Options[6] || userInput == Options[7]) {
+            Console.WriteLine(EditClass);
+            string userSubject = ReadInput.GetUserInput(student.Classes);
+            Tuple<bool, string> stringError = InputValidation.IsError(userSubject);
+            if (stringError.Item1){
+                Console.WriteLine(stringError.Item2);
+                return 0;
+            }
+            Console.WriteLine(NewClass);
+            string newSubject = ReadInput.GetUserInput();
+            stringError = InputValidation.IsError(newSubject);
+            if (stringError.Item1){
+                Console.WriteLine(stringError.Item2);
+                return 0;
+            }
+            student.UpdateClass(userSubject, newSubject);
+            return 0;
+        }
+        else if (userInput == Options[8] || userInput == Options[9]) {
+            student.DisplayStudent();
+            return 0;
+        }
+        else if (userInput == Options[10] || userInput == Options[11]) {
+            Console.WriteLine(NewInfo);
+            student.FirstName = PersonLogic.GetPersonFName();
+            student.LastName = PersonLogic.GetPersonLName();
+            student.Age = PersonLogic.GetPersonAge();
+            return 0;
+        } // might have to make -1
+        else if (userInput == Options[12] || userInput == Options[13]) {
+            bool validInput;
+            do{
+                validInput = InputValidation.ConfirmInput(userInput);
+            } while(validInput);
+            Data.RemovePerson(student);
+            Data.SaveData();
+            return -2;
+            }
+        else if (userInput == Options[14] || userInput == Options[15]) {
+            return -2;
+            }
+        else if (userInput == Options[16] || userInput == Options[17]) {
+            Data.SaveData();
+            return 0;
+        }
+        return 0;
     }
 }

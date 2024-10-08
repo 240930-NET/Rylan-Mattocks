@@ -4,5 +4,5 @@ public abstract class Person{
     public string? LastName {get; set;}
     public int Age {get; set;}
     public int UserID {get; set;}
-    public int NextID {get; set;} = 0;
+    public int NextID {get; set;} = 1;
 }
