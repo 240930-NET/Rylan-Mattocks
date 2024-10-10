@@ -40,14 +40,14 @@ public static class MainMenu {
         object[] formatStrings = [userFName, userLName, userID];
         if (verifiedUser == -1){
             //formatStrings = [userFName, userLName, userID];
-            Console.WriteLine(String.Format(WrongID,formatStrings));
+            Console.WriteLine(String.Format(WrongID, formatStrings));
             Person student = new Student();
             return Tuple.Create(-1, student);
         }
         else if (verifiedUser == userChoice){
             //formatStrings = [userFName, userLName];
             Console.WriteLine(String.Format(Success, formatStrings));
-            return Tuple.Create(userChoice, (Person)Data.People.Where(Person => Person.UserID == userID));
+            return Tuple.Create(userChoice, MainMenuLogic.GetPerson(userID, userChoice));
         }
         else /*(verifiedUser == 0)*/{
             Console.WriteLine(NoUser);

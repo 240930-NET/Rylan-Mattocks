@@ -4,11 +4,12 @@ using Roster.APP;
 
 public static class InputValidation{
 
-    private static readonly string Confirmation = "Does this input look correct: {0}";
+    private static readonly string Confirmation = "\nDoes this input look correct: {0}" +
+                                                    "\n1. Yes                           2. No";
     private static readonly List<string> Options = ["1", "Yes", "2", "No"];
     public static string CheckString(string? userInput){
         if (String.IsNullOrEmpty(userInput)) return InvalidInputs.IsNull;
-        // if (!CheckRegex(userInput)) return InvalidInputs.IsInvalid(userInput);
+        if (!CheckRegex(userInput)) return InvalidInputs.IsInvalid(userInput);
         string cleanInput = Cleaner.Clean(userInput);
         CheckExit(cleanInput);
         return cleanInput;
@@ -16,7 +17,9 @@ public static class InputValidation{
 
     public static string CheckInt(string? userInput){
         if (string.IsNullOrEmpty(userInput)) return InvalidInputs.IsNull;
-        if (TryParse(userInput)) return userInput;
+        string cleanInput = Cleaner.Clean(userInput);
+        CheckExit(cleanInput);
+        if (TryParse(cleanInput)) return cleanInput;
         else return InvalidInputs.IsInvalid(userInput);
     }
 

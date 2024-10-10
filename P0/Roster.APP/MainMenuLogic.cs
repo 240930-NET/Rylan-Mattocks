@@ -42,4 +42,18 @@ public static class MainMenuLogic{
                 return person;
         }
     }
+
+    public static Person GetPerson(int userID, int userType){
+        switch(userType){
+            case 1:
+                Person teacher = (Teacher)Data.People.Where(Person => Person.UserID == userID);
+                return teacher;
+            case 2:
+                Person student = (Student)Data.People.Where(Person => Person.UserID == userID);
+                return student;
+            default:
+                Person person = new Teacher();
+                return person;
+        }
+    }
 }

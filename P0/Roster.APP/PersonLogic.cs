@@ -45,7 +45,7 @@ public static class PersonLogic{
         Tuple<bool,string> checkInput = InputValidation.IsError(userInput);
         if (checkInput.Item1){
             Console.WriteLine(checkInput.Item2);
-            return GetPersonFName();
+            return GetPersonLName();
         }
         return userInput;
     }
@@ -64,14 +64,19 @@ public static class PersonLogic{
     public static int GetPersonAge(){
         Console.WriteLine(PersonAge);
         string? userInput = ReadInput.GetUserInt();
-        int userInt = int.Parse(userInput);
-        userInput = InputValidation.CheckAge(userInt);
         Tuple<bool, string> validInput = InputValidation.IsError(userInput);
         if (validInput.Item1){
             Console.WriteLine(validInput.Item2);
             return GetPersonAge();
         }
-        else return userInt;
+        int userInt = int.Parse(userInput);
+        userInput = InputValidation.CheckAge(userInt);
+        validInput = InputValidation.IsError(userInput);
+        if (validInput.Item1){
+            Console.WriteLine(validInput.Item2);
+            return GetPersonAge();
+        }
+        return userInt;
     }
 
     public static string GetPersonSubject(){
