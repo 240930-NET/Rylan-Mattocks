@@ -1,3 +1,5 @@
+namespace Roster.APP.Inputs;
+
 public static class InvalidInputs{
     public static string IsNull = "!\nInvalid Response: \'null value\'. Please try again.";
 

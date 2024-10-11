@@ -1,4 +1,4 @@
-namespace Roster.APP;
+namespace Roster.APP.Inputs;
 
 public class ReadInput{
     // Get the input from the user and check if valid
@@ -16,7 +16,9 @@ public class ReadInput{
     public static string GetUserInput(List<string> options){
         string? userInput = Console.ReadLine();
         string checkedString = InputValidation.CheckString(userInput);
-        if (!options.Contains(checkedString)) Console.WriteLine(checkedString);
+        Tuple<bool, string> errorString = InputValidation.IsError(checkedString);
+        if (errorString.Item1) return InvalidInputs.IsInvalid(userInput!);
+        if (!options.Contains(checkedString)) return InvalidInputs.IsInvalid(checkedString);
         return checkedString;
     }
 
@@ -24,10 +26,8 @@ public class ReadInput{
         string? userInput = Console.ReadLine();
         string checkedInt = InputValidation.CheckInt(userInput);
         Tuple<bool, string> errorString = InputValidation.IsError(checkedInt);
-        if (errorString.Item1){
-            Console.WriteLine(errorString.Item2);
-            return checkedInt;
-        }
+        if (errorString.Item1) return InvalidInputs.IsInvalid(userInput!);
+        if (!options.Contains(int.Parse(checkedInt))) return InvalidInputs.IsInvalid(checkedInt);
         return checkedInt;
     }
 }

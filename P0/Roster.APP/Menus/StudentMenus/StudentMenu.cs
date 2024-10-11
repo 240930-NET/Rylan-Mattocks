@@ -1,4 +1,5 @@
-using Roster.APP;
+using Roster.APP.People;
+namespace Roster.APP.Menus.StudentMenus;
 
 public static class StudentMenu{
     private static readonly string StudentOptions = (

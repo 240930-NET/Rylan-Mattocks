@@ -1,6 +1,6 @@
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using Roster.APP;
+using Roster.APP.DataStorage;
+namespace Roster.APP.Inputs;
 
 public static class InputValidation{
 
@@ -34,7 +34,10 @@ public static class InputValidation{
     }
 
     private static void CheckExit(string userInput){
-        if (userInput == "Exit") Environment.Exit(0);
+        if (userInput == "Exit") {
+            Data.SaveData();
+            Environment.Exit(0);
+        }
     }
 
     private static bool CheckRegex(string userInput){
@@ -57,7 +60,11 @@ public static class InputValidation{
         object[] formatStrings = [inputToConfirm];
         Console.WriteLine(String.Format(Confirmation, formatStrings));
         string userInput = ReadInput.GetUserInput(Options);
-        Console.WriteLine(userInput);
+        Tuple<bool, string> errorString = InputValidation.IsError(userInput);
+            if (errorString.Item1){
+                Console.WriteLine(errorString.Item2);
+                return ConfirmInput(inputToConfirm);
+            }
         if (userInput == Options[0] || userInput == Options[1]){
             return true;
         }

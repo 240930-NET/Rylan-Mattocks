@@ -1,18 +1,18 @@
-namespace Roster.APP;
-
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using Roster.APP.People;
+namespace Roster.APP.DataStorage;
 
 public class Data{
 
     public static List<Person> People {get; set; } = [];
+    public static int NextID {get; set;} = 1;
 
     public static async Task SaveStudentsToJson(List<Student> students){
 
         string studentList = JsonSerializer.Serialize(students);
 
         try{
-            using(StreamWriter sw = File.CreateText("students.txt")){
+            using(StreamWriter sw = File.CreateText("DataSTorage/students.json")){
                 await sw.WriteAsync(studentList);
             }
         }
@@ -26,7 +26,7 @@ public class Data{
         string teacherList = JsonSerializer.Serialize(teachers);
 
         try{
-            using(StreamWriter sw = File.CreateText("files/teachers.txt")){
+            using(StreamWriter sw = File.CreateText("DataStorage/teachers.json")){
                 await sw.WriteAsync(teacherList);
             }
         }
@@ -37,7 +37,7 @@ public class Data{
 
     public static List<Student> GetStudentsFromJson(){
         try {
-            using(StreamReader sr = File.OpenText("files/students.txt")){
+            using(StreamReader sr = File.OpenText("DataStorage/students.json")){
                 string jstring = sr.ReadToEnd();
                 if (jstring.Length > 0) return JsonSerializer.Deserialize<List<Student>>(jstring)!;
                 else return [];
@@ -51,7 +51,7 @@ public class Data{
 
     public static List<Teacher> GetTeachersFromJson(){
         try {
-            using(StreamReader sr = File.OpenText("files/teachers.txt")){
+            using(StreamReader sr = File.OpenText("DataStorage/teachers.json")){
                 string jstring = sr.ReadToEnd();
                 if (jstring.Length > 0) return JsonSerializer.Deserialize<List<Teacher>>(jstring)!;
                 else return [];
@@ -64,25 +64,29 @@ public class Data{
     }
     public static void SetPeople(){
         foreach (Student s in GetStudentsFromJson()){
-            Data.People.Add(s);
+            People.Add(s);
+            NextID = Math.Max(s.UserID, NextID);
+            NextID++;
         }
         foreach (Teacher t in GetTeachersFromJson()){
-            Data.People.Add(t);
+            People.Add(t);
+            NextID = Math.Max(t.UserID, NextID);
+            NextID++;
         }
     }
 
     public static void AddPeople(Person person){
-        Data.People.Add(person);
+        People.Add(person);
     }
 
     public static void RemovePerson(Person person){
-        Data.People.Remove(person);
+        People.Remove(person);
     }
 
     public static void SaveData(){
         List<Student> saveStudents = [];
         List<Teacher> saveTeachers = [];
-        foreach (Person person in Data.People){
+        foreach (Person person in People){
             if (person is Student student)
                 saveStudents.Add(student);
             if (person is Teacher teacher){
@@ -93,11 +97,31 @@ public class Data{
         _ = SaveTeachersToJson(saveTeachers);
     }
 
-    public static int GetID(){
-        int highID = -1;
+    public static List<Student> GetStudents(){
+        List<Student> students = [];
         foreach (Person person in Data.People){
-            highID = Math.Max(highID, person.UserID);
+            if (person is Student student){
+                students.Add(student);
+            }
         }
-        return highID;
+        return students;
+    }
+
+    public static List<Teacher> GetTeachers(){
+        List<Teacher> teachers = [];
+        foreach (Person person in Data.People){
+            if (person is Teacher teacher){
+                teachers.Add(teacher);
+            }
+        }
+        return teachers;
+    }
+
+    public static HashSet<string> GetAllClasses(){
+        HashSet<string> allClasses = [];
+        foreach (Teacher teacher in GetTeachers()){
+            allClasses.Add(teacher.Subject!);
+        }
+        return allClasses;
     }
 }

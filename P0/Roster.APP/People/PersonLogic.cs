@@ -1,23 +1,16 @@
-using System.Runtime.CompilerServices;
-using Roster.APP;
+namespace Roster.APP.People;
+using Roster.APP.Inputs;
+using Roster.APP.DataStorage;
 
 public static class PersonLogic{
 
     private static readonly string FirstName = "\nPlease enter first name: ";
     private static readonly string LastName = "\nPlease enter last name: ";
-    private static readonly string PersonID = "\nIf you are a new user or forgot your User ID: enter 0.\nPlease enter User ID: ";
-    private static readonly string NoUserIDFound = "\nI am sorry {0} {1}, but we do not have anyone in our system with the User ID: {2}.\nIs this User ID: {2} correct?\n" +
-                                                    "1. \'Yes\'               2. \'No\'";
+    private static readonly string NewPersonID = "\nIf you are a new user: enter 0.\nPlease enter User ID: ";
+    private static readonly string PersonID = "\nPlease enter User ID: ";
     private static readonly string PersonAge = "\nPlease enter age(1-100): ";
     private static readonly string PersonSubject = "\nPlease enter subject: ";
-    private static List<string> Options = ["1, Yes, 2, No", "Back"];
     private static string ShowUserID = "\nYou have been added to our system {0}!\nYour User ID is {1}. You will need this to access your account.";
-
-    public static Type GetPersonType(Person person){
-        if (person is Student student) return student.GetType();
-        else if (person is Teacher teacher) return teacher.GetType();
-        else return person.GetType();
-    }
 
     public static Tuple<string,string,int> GetPersonInfo(){
         Tuple<string,string> fullName = GetPersonName();
@@ -51,7 +44,7 @@ public static class PersonLogic{
     }
 
     public static int GetPersonID(){
-        Console.WriteLine(PersonID);
+        Console.WriteLine(NewPersonID);
         string? userInput = ReadInput.GetUserInt();
         Tuple<bool,string> checkInput = InputValidation.IsError(userInput);
         if (checkInput.Item1){
@@ -82,6 +75,11 @@ public static class PersonLogic{
     public static string GetPersonSubject(){
         Console.WriteLine(PersonSubject);
         string? userInput = ReadInput.GetUserInput();
+        Tuple<bool,string> checkInput = InputValidation.IsError(userInput);
+        if (checkInput.Item1){
+            Console.WriteLine(checkInput.Item2);
+            return GetPersonSubject();
+        }
         if (!InputValidation.ConfirmInput(userInput)) return GetPersonSubject();
         return userInput;
     }
@@ -119,27 +117,19 @@ public static class PersonLogic{
     }
 
     public static Teacher CreateTeacher(string firstName, string lastName, int age, string subject){
-        Teacher teacher = new(firstName, lastName, age, subject);
+        Teacher teacher = new(firstName, lastName, age, subject, Data.NextID);
+        Data.NextID++;
         object[] formatStrings = [teacher.FirstName!, teacher.UserID];
         Console.WriteLine(String.Format(ShowUserID, formatStrings));
         return teacher;
     }
 
     public static Student CreateStudent(string firstName, string lastName, int age){
-        Student student = new(firstName, lastName, age);
+        Student student = new(firstName, lastName, age, Data.NextID);
+        Data.NextID++;
         object[] formatStrings = [student.FirstName!, student.UserID];
         Console.WriteLine(String.Format(ShowUserID, formatStrings));
         return student;
-    }
-
-    public static int VerifyID(string firstName, string lastName, int userID){
-        object[] formatStrings = [firstName, lastName, userID];
-        string message = String.Format(NoUserIDFound, formatStrings);
-        Console.WriteLine(message);
-        string userInput = ReadInput.GetUserInput(Options);
-        if (userInput == Options[0] || userInput == Options[1]) return 0;
-        else if (userInput == Options[1] || userInput == Options[2]) return 1;
-        else return -1;
     }
     
     public static List<int> GetStudentIDs(){
@@ -151,4 +141,36 @@ public static class PersonLogic{
         }
         return studentIDs;
     }
+
+    public static int SetPersonID(List<int> options){
+        Console.WriteLine(PersonID);
+        string? userInput = ReadInput.GetUserInt(options);
+        Tuple<bool,string> checkInput = InputValidation.IsError(userInput);
+        if (checkInput.Item1){
+            Console.WriteLine(checkInput.Item2);
+            return SetPersonID(options);
+        }
+        else return int.Parse(userInput);
+    }
+    public static string GetStudentSubject(){
+        Console.WriteLine(PersonSubject);
+        string? userInput = ReadInput.GetUserInput(Data.GetAllClasses().ToList());
+        Tuple<bool,string> checkInput = InputValidation.IsError(userInput);
+        if (checkInput.Item1){
+            Console.WriteLine(checkInput.Item2);
+            return GetStudentSubject();
+        }
+        return userInput;
+    }
+    public static string SetStudentSubject(List<string> options){
+        Console.WriteLine(PersonSubject);
+        string? userInput = ReadInput.GetUserInput(options);
+        Tuple<bool,string> checkInput = InputValidation.IsError(userInput);
+        if (checkInput.Item1){
+            Console.WriteLine(checkInput.Item2);
+            return SetStudentSubject(options);
+        }
+        return userInput;
+    }
+    
 }

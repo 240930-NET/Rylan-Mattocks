@@ -1,6 +1,7 @@
-using System.ComponentModel.Design;
-using System.Security.Cryptography.X509Certificates;
-using Roster.APP;
+using Roster.APP.People;
+using Roster.APP.Inputs;
+using Roster.APP.DataStorage;
+namespace Roster.APP.Menus.StudentMenus;
 
 public static class StudentMenuLogic{
     private static List<string> Options = [
@@ -19,52 +20,52 @@ public static class StudentMenuLogic{
     private static readonly string EditClass = "\nType the class you would like to edit: ";
     private static readonly string NewClass = "\nType the new class: ";
     private static readonly string NewInfo = "\nType in your new info: ";
-    private static readonly string SignIn = "\nPlease sign in again!";
+    private static readonly string StudentClasses = "\nHere are all your current classes: ";
+    private static readonly string AllClasses = "\nHere are all the available classes: ";
 
     public static int GetUserOption(Student student){
         object[] formatStrings = [student.FirstName!];
         Options[9] = String.Format(Options[9], formatStrings);
         string userInput = ReadInput.GetUserInput(Options);
+        Tuple<bool, string> errorString = InputValidation.IsError(userInput);
+            if (errorString.Item1){
+                Console.WriteLine(errorString.Item2);
+                return 0;
+            }
         if (userInput == Options[0] || userInput == Options[1]){
             student.DisplayClasses();
             return 0;
         }
         else if (userInput == Options[2] || userInput == Options[3]) {
-            Console.WriteLine(AddClass);
-            string subject = ReadInput.GetUserInput();
-            Tuple <bool, string> validInput = InputValidation.IsError(subject);
-            if (validInput.Item1){
-                Console.WriteLine(validInput.Item2);
-                return 0;
+            Console.WriteLine(AllClasses);
+            foreach (string str in Data.GetAllClasses()){
+                Console.WriteLine($"Available Class: {str}");
             }
+            Console.WriteLine(AddClass);
+            string subject = PersonLogic.GetStudentSubject();
             student.AddClass(subject);
             return 0;
         }
         else if (userInput == Options[4] || userInput == Options[5]) {
+            Console.WriteLine(StudentClasses);
+            student.DisplayClasses();
             Console.WriteLine(RemoveClass);
-            string subject = ReadInput.GetUserInput();
-            Tuple <bool, string> validInput = InputValidation.IsError(subject);
-            if (validInput.Item1){
-                Console.WriteLine(validInput.Item2);
-                return 0;
-            }
+            string subject = PersonLogic.SetStudentSubject(student.Classes.ToList());
             student.RemoveClass(subject);
             return 0;
         }
         else if (userInput == Options[6] || userInput == Options[7]) {
+            Console.WriteLine(StudentClasses);
+            student.DisplayClasses();
             Console.WriteLine(EditClass);
-            string userSubject = ReadInput.GetUserInput(student.Classes);
-            if (!student.IsClass(userSubject)){
-                return 0;
+            string oldSubject = PersonLogic.SetStudentSubject(student.Classes.ToList());
+            Console.WriteLine(AllClasses);
+            foreach (string str in Data.GetAllClasses()){
+                Console.WriteLine($"Available Class: {str}");
             }
             Console.WriteLine(NewClass);
-            string newSubject = ReadInput.GetUserInput();
-            Tuple<bool, string> stringError = InputValidation.IsError(newSubject);
-            if (stringError.Item1){
-                Console.WriteLine(stringError.Item2);
-                return 0;
-            }
-            student.UpdateClass(userSubject, newSubject);
+            string newSubject = PersonLogic.GetStudentSubject();
+            student.UpdateClass(oldSubject, newSubject);
             return 0;
         }
         else if (userInput == Options[8] || userInput == Options[9]) {
@@ -76,19 +77,21 @@ public static class StudentMenuLogic{
             student.FirstName = PersonLogic.GetPersonFName();
             student.LastName = PersonLogic.GetPersonLName();
             student.Age = PersonLogic.GetPersonAge();
-            Console.WriteLine(SignIn);
             return -2;
-        } // might have to make -1
+        }
         else if (userInput == Options[12] || userInput == Options[13]) {
-            bool validInput;
-            do{
-                validInput = InputValidation.ConfirmInput(userInput);
-            } while(!validInput);
+            if (!InputValidation.ConfirmInput(userInput)) return 0;
+            foreach (Person person in Data.People){
+                if (person is Teacher teacher){
+                    teacher.StudentID.Remove(student.UserID);
+                }
+            }
             Data.RemovePerson(student);
             Data.SaveData();
             return -2;
             }
         else if (userInput == Options[14] || userInput == Options[15]) {
+            Data.SaveData();
             return -2;
             }
         else if (userInput == Options[16] || userInput == Options[17]) {

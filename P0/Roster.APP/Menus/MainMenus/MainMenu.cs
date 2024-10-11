@@ -1,4 +1,5 @@
-using Roster.APP;
+using Roster.APP.People;
+namespace Roster.APP.Menus.MainMenus;
 
 public static class MainMenu {
 
@@ -12,8 +13,6 @@ public static class MainMenu {
 
     private static readonly string NoUser = "\nIt looks like you aren't in our system yet.\nLet's get you added!";
     private static readonly string Success = "\nLogin Successful!\nWelcome {0} {1}!";
-    private static readonly string IsTeacher = "\nIt looks like you are a teacher!\nWe will redirect you!";
-    private static readonly string IsStudent = "\nIt looks like you are a student!\nWe will redirect you!";
     private static readonly string WrongID = "\nI'm sorry {0}, but {0} {1} does not match {2}.\nPlease login again.";
     private static int userChoice;
 
@@ -39,19 +38,22 @@ public static class MainMenu {
         int verifiedUser = MainMenuLogic.VerifyUser(userFName, userLName, userID);
         object[] formatStrings = [userFName, userLName, userID];
         if (verifiedUser == -1){
-            //formatStrings = [userFName, userLName, userID];
             Console.WriteLine(String.Format(WrongID, formatStrings));
             Person student = new Student();
             return Tuple.Create(-1, student);
         }
         else if (verifiedUser == userChoice){
-            //formatStrings = [userFName, userLName];
             Console.WriteLine(String.Format(Success, formatStrings));
             return Tuple.Create(userChoice, MainMenuLogic.GetPerson(userID, userChoice));
         }
-        else /*(verifiedUser == 0)*/{
+        else if (verifiedUser == 0){
             Console.WriteLine(NoUser);
             return Tuple.Create(userChoice, MainMenuLogic.CreatePerson(userFName, userLName, userChoice));
+        }
+        else {
+            Console.WriteLine(String.Format(WrongID, formatStrings));
+            Person student = new Student();
+            return Tuple.Create(-1, student);
         }
     }
 }

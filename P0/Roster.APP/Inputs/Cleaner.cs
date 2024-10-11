@@ -1,6 +1,4 @@
-using System.Text.RegularExpressions;
-
-namespace Roster.APP;
+namespace Roster.APP.Inputs;
 public static class Cleaner {
 
     public static string Clean(string str){

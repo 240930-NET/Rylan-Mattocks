@@ -1,4 +1,9 @@
-﻿namespace Roster.APP;
+﻿using Roster.APP.DataStorage;
+using Roster.APP.People;
+using Roster.APP.Menus.MainMenus;
+using Roster.APP.Menus.StudentMenus;
+using Roster.APP.Menus.TeacherMenus;
+namespace Roster.APP;
 class Program
 {
     static void Main(string[] args)
