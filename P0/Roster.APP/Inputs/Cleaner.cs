@@ -6,7 +6,7 @@ public static class Cleaner {
         return Upper(cleanString);
     }
 
-    public static string Upper(string str){
+    private static string Upper(string str){
         string upperString = $"{char.ToUpper(str[0])}{str[1..]}";
         return upperString;
     }
