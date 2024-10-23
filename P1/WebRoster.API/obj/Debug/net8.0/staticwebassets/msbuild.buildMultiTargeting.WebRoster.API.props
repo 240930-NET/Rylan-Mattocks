@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\WebRoster.API.props" />
-</Project>
