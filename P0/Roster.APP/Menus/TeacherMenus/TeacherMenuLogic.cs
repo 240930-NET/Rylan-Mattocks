@@ -100,6 +100,11 @@ public class TeacherMenuLogic{
         else if (Options[14] == userInput || Options[15] == userInput){
             if (!InputValidation.ConfirmInput(userInput)) return 0;
             Data.RemovePerson(teacher);
+            foreach (Student student in Data.GetStudents()){
+                if (student.Classes.Contains(teacher.Subject!)) {
+                    if (!Data.GetAllClasses().Contains(teacher.Subject!)) student.Classes.Remove(teacher.Subject!);
+                }
+            }
             Data.SaveData();
             return -1;
         }
