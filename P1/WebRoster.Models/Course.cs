@@ -8,8 +8,4 @@ public class Course{
     public List<CourseInstructor> CourseInstructors {get; set;}
     [JsonIgnore]
     public List<CourseStudent> CourseStudents {get; set;}
-    /*public Subject(){}
-    public Subject(string subject){ 
-        this.SubjectName = subject;
-    }*/
 }

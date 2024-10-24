@@ -1,8 +1,7 @@
 using WebRoster.Data;
 namespace WebRoster.Utils.Generators;
-public class UserGenerator {
+public class UserGenerator : IGenerator{
     private readonly RosterContext _context;
-
     public UserGenerator(RosterContext context) {
         this._context = context;
     }

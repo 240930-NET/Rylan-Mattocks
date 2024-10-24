@@ -1,47 +1,58 @@
+using AutoMapper;
 using Moq;
 using WebRoster.Data;
 using WebRoster.Models;
+using WebRoster.Models.DTO;
 using WebRoster.Services;
+using WebRoster.Utils.Generators;
+using WebRoster.Utils.Mappers;
 namespace WebRoster.TEST;
 
 public class UserServiceTests
 {
+    private readonly Mock<IUserRepo> _mockRepo;
+    private readonly IMapper _mapper;
+    private readonly Mock<IGenerator> _generator;
+    private readonly UserService _userService;
+    public UserServiceTests(){
+        var config = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
+        _mapper = config.CreateMapper();
+        _mockRepo = new Mock<IUserRepo>();
+        _generator = new Mock<IGenerator>();
+        _userService = new UserService(_mockRepo.Object, _mapper, _generator.Object);
+    }
     [Theory]
     [InlineData(0)]
     [InlineData(5)]
     public async void GetAllUsersReturnsList(int users)
     {
-        Mock<IUserRepo> mockRepo = new();
-        UserService userService = new(mockRepo.Object);
         List<User> userList = [];
 
         for (int i = 0; i < users; i++) {
-            userList.Add(new User {});
+            userList.Add(new User {FirstName = "", LastName = "", UserName = "", Password = ""});
         }
 
-        mockRepo.Setup(repo => repo.GetAllUsersAsync()).ReturnsAsync(userList);
-        var result = await userService.GetAllUsersAsync();
+        _mockRepo.Setup(repo => repo.GetAllUsersAsync()).ReturnsAsync(userList);
+        var result = await _userService.GetAllUsersAsync();
 
         Assert.Equal(users, result.Count);
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(4)]
-    public async void GetUserByIdReturnsUser(int id){
-        Mock<IUserRepo> mockRepo = new();
-        UserService userService = new(mockRepo.Object);
+    [InlineData(1, "john")]
+    [InlineData(4, "jane")]
+    public async void GetUserByIdReturnsUser(int id, string name){
         List<User> userList = [
-            new User {ID = 1},
-            new User {ID = 2},
-            new User {ID = 3},
-            new User {ID = 4}
+            new User {ID = 1, FirstName = "john", LastName = "", UserName = "", Password = ""},
+            new User {ID = 2, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 3, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 4, FirstName = "jane", LastName = "", UserName = "", Password = ""}
         ];
 
-        mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
-        var result = await userService.GetUserByIdAsync(id);
+        _mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
+        var result = await _userService.GetUserByIdAsync(id);
 
-        Assert.Equal(id, result.ID);
+        Assert.Equal(name, result.FirstName);
     }
 
     [Theory]
@@ -49,80 +60,76 @@ public class UserServiceTests
     [InlineData(-1)]
     [InlineData(7)]
     public async void GetUserByIdThrowsException(int id) {
-        Mock<IUserRepo> mockRepo = new();
-        UserService userService = new(mockRepo.Object);
         List<User> userList = [
-            new User {ID = 1},
-            new User {ID = 2},
-            new User {ID = 3},
-            new User {ID = 4}
+            new User {ID = 1, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 2, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 3, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 4, FirstName = "", LastName = "", UserName = "", Password = ""}
         ];
 
-        mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
+        _mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
 
-        await Assert.ThrowsAnyAsync<NullReferenceException>(() => userService.GetUserByIdAsync(id));
+        await Assert.ThrowsAnyAsync<NullReferenceException>(() => _userService.GetUserByIdAsync(id));
     }
 
     [Fact]
     public async void AddUserToList() {
-        Mock<IUserRepo> mockRepo = new();
-        UserService userService = new(mockRepo.Object);
         List<User> userList = [
-            new User {ID = 1},
-            new User {ID = 2},
-            new User {ID = 3},
-            new User {ID = 4}
+            new User {ID = 1, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 2, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 3, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 4, FirstName = "", LastName = "", UserName = "", Password = ""}
         ];
 
-        User newUser = new() {ID = 5};
+        AddUserDTO addUserDTO = new() {FirstName = "", LastName = ""};
+        User user = new() {ID = 5, FirstName = "", LastName = "", UserName = "", Password = ""};
 
-        mockRepo.Setup(repo => repo.AddUserAsync(It.IsAny<User>())).Callback(() => userList.Add(newUser));
+        _mockRepo.Setup(repo => repo.AddUserAsync(It.IsAny<User>())).Callback(() => userList.Add(user));
+        _generator.Setup(gen => gen.GenerateUsername(It.IsAny<string>())).Returns("username");
+        _generator.Setup(gen => gen.GeneratePassword()).Returns("password");
 
-        await userService.AddUserAsync(newUser);
+        await _userService.AddUserAsync(addUserDTO);
 
-        Assert.Contains(userList, u => u.ID == newUser.ID);
+        Assert.Contains(userList, u => u.ID == user.ID);
     }
 
     [Theory]
     [InlineData(1, "john")]
     [InlineData(3, "jane")]
     public async void UpdateUserToList(int id, string newName) {
-        Mock<IUserRepo> mockRepo = new();
-        UserService userService = new(mockRepo.Object);
         List<User> userList = [
-            new User {ID = 1},
-            new User {ID = 2},
-            new User {ID = 3},
-            new User {ID = 4}
+            new User {ID = 1, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 2, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 3, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 4, FirstName = "", LastName = "", UserName = "", Password = ""}
         ];
 
-        User newUser = new() {ID = id, FirstName = newName};
+        UpdateUserDTO updateUserDTO = new() {FirstName = newName, LastName = "", UserName = "", Password = ""};
+        User newUser = new() {ID = 4, FirstName = newName, LastName = "", UserName = "", Password = ""};
 
-        mockRepo.Setup(repo => repo.UpdateUserAsync(It.IsAny<User>())).Callback(() => userList.FirstOrDefault(u => u.ID == id)!.FirstName = newUser.FirstName);
-        mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
+        _mockRepo.Setup(repo => repo.UpdateUserAsync(It.IsAny<User>())).Callback(() => userList.FirstOrDefault(u => u.ID == id)!.FirstName = newUser.FirstName);
+        _mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
 
-        await userService.UpdateUserAsync(newUser);
+        await _userService.UpdateUserAsync(id, updateUserDTO);
 
-        Assert.Equal(userList[id - 1].FirstName, newName);
+        Assert.Equal(newName, userList[id - 1].FirstName);
     }
 
     [Theory]
     [InlineData(1)]
     [InlineData(3)]
     public async void DeleteUserFromList(int id) {
-        Mock<IUserRepo> mockRepo = new();
-        UserService userService = new(mockRepo.Object);
         List<User> userList = [
-            new User {ID = 1},
-            new User {ID = 2},
-            new User {ID = 3},
-            new User {ID = 4}
+            new User {ID = 1, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 2, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 3, FirstName = "", LastName = "", UserName = "", Password = ""},
+            new User {ID = 4, FirstName = "", LastName = "", UserName = "", Password = ""}
         ];
+        
+        _mockRepo.Setup(repo => repo.DeleteUserAsync(It.IsAny<User>())).Callback(() => userList.RemoveAll(u => u.ID == id));
+        _mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
 
-        mockRepo.Setup(repo => repo.DeleteUserAsync(It.IsAny<User>())).Callback(() => userList.RemoveAll(u => u.ID == id));
-        mockRepo.Setup(repo => repo.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(userList.FirstOrDefault(u => u.ID == id));
-
-        await userService.DeleteUserAsync(id);
+        await _userService.DeleteUserAsync(id);
         
         Assert.DoesNotContain(userList, u => u.ID == id);
     }

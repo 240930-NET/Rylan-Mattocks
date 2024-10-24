@@ -22,21 +22,4 @@ public class User{
     public List<CourseInstructor> CourseInstructors {get; set;}
     [JsonIgnore]
     public List<CourseStudent> CourseStudents {get; set;}
-
-    /*public Person(){}
-    public Person(string fName, string lName, int age){
-        this.FirstName = fName;
-        this.LastName = lName;
-        this.Age = age;
-        this.UserName = fName + lName + this.ID;
-        this.Password = "Password" + this.ID;
-    }
-    public Person(string fName, string lName, int age, string userName, string password, int type){
-        this.FirstName = fName;
-        this.LastName = lName;
-        this.Age = age;
-        this.UserName = userName;
-        this.Password = password;
-        //this.PersonTypeID = type;
-    }*/
 }

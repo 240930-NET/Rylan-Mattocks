@@ -219,10 +219,6 @@ for (i = 0, l = charts.length; i < l; i++) {
 
 var assemblies = [
   {
-    "name": "WebRoster.Controllers",
-    "classes": [
-    ]},
-  {
     "name": "WebRoster.Data",
     "classes": [
     ]},
@@ -233,9 +229,15 @@ var assemblies = [
   {
     "name": "WebRoster.Services",
     "classes": [
-      { "name": "WebRoster.Services.CourseService", "rp": "WebRoster.Services_CourseService.html", "cl": 20, "ucl": 0, "cal": 20, "tl": 26, "cb": 2, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "WebRoster.Services.RoleService", "rp": "WebRoster.Services_RoleService.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 27, "cb": 2, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "WebRoster.Services.UserService", "rp": "WebRoster.Services_UserService.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 27, "cb": 2, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "WebRoster.Services.CourseService", "rp": "WebRoster.Services_CourseService.html", "cl": 30, "ucl": 0, "cal": 30, "tl": 39, "cb": 4, "tb": 6, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "WebRoster.Services.RoleService", "rp": "WebRoster.Services_RoleService.html", "cl": 30, "ucl": 0, "cal": 30, "tl": 39, "cb": 4, "tb": 6, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "WebRoster.Services.UserService", "rp": "WebRoster.Services_UserService.html", "cl": 34, "ucl": 0, "cal": 34, "tl": 50, "cb": 4, "tb": 6, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+    ]},
+  {
+    "name": "WebRoster.Utils",
+    "classes": [
+      { "name": "WebRoster.Utils.Generators.UserGenerator", "rp": "WebRoster.Utils_UserGenerator.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 28, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "WebRoster.Utils.Mappers.MappingProfile", "rp": "WebRoster.Utils_MappingProfile.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
 ];
 

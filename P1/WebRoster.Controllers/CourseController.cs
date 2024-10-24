@@ -47,8 +47,8 @@ public class CourseController : Controller{
         try {
             return Ok(await _courseService.UpdateCourseAsync(id, updateCourseDTO));
         }
-        catch {
-            return BadRequest();
+        catch(Exception e) {
+            return BadRequest(e.Message);
         }
     }
 

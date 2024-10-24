@@ -6,9 +6,4 @@ public class Role{
     public required string RoleName {get; set;}
     [JsonIgnore]
     public List<User> Users {get; set;}
-    /*public PersonType(){}
-
-    public PersonType(string type){
-        this.Type = type;
-    }*/
 }

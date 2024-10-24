@@ -9,8 +9,8 @@ namespace WebRoster.Services;
 public class UserService : IUserService {
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;
-    private readonly UserGenerator _userGenerator;
-    public UserService(IUserRepo userRepo, IMapper mapper, UserGenerator userGenerator) {
+    private readonly IGenerator _userGenerator;
+    public UserService(IUserRepo userRepo, IMapper mapper, IGenerator userGenerator) {
         this._userRepo = userRepo;
         this._mapper = mapper;
         this._userGenerator = userGenerator;

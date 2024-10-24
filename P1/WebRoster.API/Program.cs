@@ -26,7 +26,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 
-builder.Services.AddScoped<UserGenerator>();
+builder.Services.AddScoped<IGenerator, UserGenerator>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 

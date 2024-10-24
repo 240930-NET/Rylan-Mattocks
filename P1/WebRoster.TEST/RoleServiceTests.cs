@@ -1,47 +1,54 @@
+using AutoMapper;
 using Moq;
 using WebRoster.Data;
 using WebRoster.Models;
+using WebRoster.Models.DTO;
 using WebRoster.Services;
+using WebRoster.Utils.Mappers;
 namespace WebRoster.TEST;
 
 public class RoleServiceTests
 {
+    private readonly Mock<IRoleRepo> _mockRepo;
+    private readonly IMapper _mapper;
+    private readonly RoleService _roleService;
+    public RoleServiceTests(){
+        var config = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
+        _mapper = config.CreateMapper();
+        _mockRepo = new Mock<IRoleRepo>();
+        _roleService = new RoleService(_mockRepo.Object, _mapper);
+    }
     [Theory]
     [InlineData(0)]
     [InlineData(5)]
     public async void GetAllRolesList(int roles)
     {
-        Mock<IRoleRepo> mockRepo = new();
-        RoleService roleService = new(mockRepo.Object);
         List<Role> roleList = [];
-
         for (int i = 0; i < roles; i++) {
-            roleList.Add(new Role {});
+            roleList.Add(new Role {RoleName = ""});
         }
 
-        mockRepo.Setup(repo => repo.GetAllRolesAsync()).ReturnsAsync(roleList);
-        var result = await roleService.GetAllRolesAsync();
+        _mockRepo.Setup(repo => repo.GetAllRolesAsync()).ReturnsAsync(roleList);
+        var result = await _roleService.GetAllRolesAsync();
 
         Assert.Equal(roles, result.Count);
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(4)]
-    public async void GetRoleByIdReturnsRole(int id){
-        Mock<IRoleRepo> mockRepo = new();
-        RoleService roleService = new(mockRepo.Object);
+    [InlineData(1, "teach")]
+    [InlineData(4, "stud")]
+    public async void GetRoleByIdReturnsRole(int id, string name){
         List<Role> roleList = [
-            new Role {ID = 1},
-            new Role {ID = 2},
-            new Role {ID = 3},
-            new Role {ID = 4}
+            new Role {ID = 1, RoleName = name},
+            new Role {ID = 2, RoleName = ""},
+            new Role {ID = 3, RoleName = ""},
+            new Role {ID = 4, RoleName = name}
         ];
 
-        mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
-        var result = await roleService.GetRoleByIdAsync(id);
+        _mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
+        var result = await _roleService.GetRoleByIdAsync(id);
 
-        Assert.Equal(id, result.ID);
+        Assert.Equal(name, result.RoleName);
     }
 
     [Theory]
@@ -49,36 +56,33 @@ public class RoleServiceTests
     [InlineData(-1)]
     [InlineData(7)]
     public async void GetRoleByIdThrowsException(int id){
-        Mock<IRoleRepo> mockRepo = new();
-        RoleService roleService = new(mockRepo.Object);
         List<Role> roleList = [
-            new Role {ID = 1},
-            new Role {ID = 2},
-            new Role {ID = 3},
-            new Role {ID = 4}
+            new Role {ID = 1, RoleName = ""},
+            new Role {ID = 2, RoleName = ""},
+            new Role {ID = 3, RoleName = ""},
+            new Role {ID = 4, RoleName = ""}
         ];
 
-        mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
+        _mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
 
-        await Assert.ThrowsAnyAsync<NullReferenceException>(() => roleService.GetRoleByIdAsync(id));
+        await Assert.ThrowsAnyAsync<NullReferenceException>(() => _roleService.GetRoleByIdAsync(id));
     }
 
     [Fact]
     public async void AddRoleToList(){
-        Mock<IRoleRepo> mockRepo = new();
-        RoleService roleService = new(mockRepo.Object);
         List<Role> roleList = [
-            new Role {ID = 1},
-            new Role {ID = 2},
-            new Role {ID = 3},
-            new Role {ID = 4}
+            new Role {ID = 1, RoleName = ""},
+            new Role {ID = 2, RoleName = ""},
+            new Role {ID = 3, RoleName = ""},
+            new Role {ID = 4, RoleName = ""}
         ];
 
-        Role newRole = new Role() {ID = 5};
+        AddRoleDTO addRoleDTO = new AddRoleDTO() {RoleName = ""};
+        Role newRole = new Role() {ID = 5, RoleName = ""};
 
-        mockRepo.Setup(repo => repo.AddRoleAsync(It.IsAny<Role>())).Callback(() => roleList.Add(newRole));
+        _mockRepo.Setup(repo => repo.AddRoleAsync(It.IsAny<Role>())).Callback(() => roleList.Add(newRole));
 
-        await roleService.AddRoleAsync(newRole);
+        await _roleService.AddRoleAsync(addRoleDTO);
 
         Assert.Contains(roleList, r => r.ID == newRole.ID);
     }
@@ -87,42 +91,39 @@ public class RoleServiceTests
     [InlineData(1, "teach")]
     [InlineData(3, "stud")]
     public async void UpdateRoleToList(int id, string newName) {
-        Mock<IRoleRepo> mockRepo = new();
-        RoleService roleService = new(mockRepo.Object);
         List<Role> roleList = [
-            new Role {ID = 1},
-            new Role {ID = 2},
-            new Role {ID = 3},
-            new Role {ID = 4}
+            new Role {ID = 1, RoleName = ""},
+            new Role {ID = 2, RoleName = ""},
+            new Role {ID = 3, RoleName = ""},
+            new Role {ID = 4, RoleName = ""}
         ];
 
+        UpdateRoleDTO updateRoleDTO = new() {RoleName = newName};
         Role newRole = new() {ID = id, RoleName = newName};
 
-        mockRepo.Setup(repo => repo.UpdateRoleAsync(It.IsAny<Role>())).Callback(() => roleList.FirstOrDefault(r => r.ID == newRole.ID)!.RoleName = newRole.RoleName);
-        mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
+        _mockRepo.Setup(repo => repo.UpdateRoleAsync(It.IsAny<Role>())).Callback(() => roleList.FirstOrDefault(r => r.ID == newRole.ID)!.RoleName = newRole.RoleName);
+        _mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
 
-        await roleService.UpdateRoleAsync(newRole);
+        await _roleService.UpdateRoleAsync(id, updateRoleDTO);
 
-        Assert.Equal(roleList[id - 1].RoleName, newName);
+        Assert.Equal(newName, roleList[id - 1].RoleName);
     }
 
     [Theory]
     [InlineData(1)]
     [InlineData(3)]
     public async void DeleteRoleFromList(int id){
-        Mock<IRoleRepo> mockRepo = new();
-        RoleService roleService = new(mockRepo.Object);
         List<Role> roleList = [
-            new Role {ID = 1},
-            new Role {ID = 2},
-            new Role {ID = 3},
-            new Role {ID = 4}
+            new Role {ID = 1, RoleName = ""},
+            new Role {ID = 2, RoleName = ""},
+            new Role {ID = 3, RoleName = ""},
+            new Role {ID = 4, RoleName = ""}
         ];
 
-        mockRepo.Setup(repo => repo.DeleteRoleAsync(It.IsAny<Role>())).Callback(() => roleList.RemoveAll(r => r.ID == id));
-        mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
+        _mockRepo.Setup(repo => repo.DeleteRoleAsync(It.IsAny<Role>())).Callback(() => roleList.RemoveAll(r => r.ID == id));
+        _mockRepo.Setup(repo => repo.GetRoleByIdAsync(It.IsAny<int>())).ReturnsAsync(roleList.FirstOrDefault(r => r.ID == id));
 
-        await roleService.DeleteRoleAsync(id);
+        await _roleService.DeleteRoleAsync(id);
 
         Assert.DoesNotContain(roleList, r => r.ID == id);
     }
