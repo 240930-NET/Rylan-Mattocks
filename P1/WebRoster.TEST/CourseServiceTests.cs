@@ -105,7 +105,7 @@ public class CourseServiceTests
         List<AddCourseInstructorDTO> courseIs = [addCourseInstructorDTO];
         List<AddCourseStudentDTO> courseSs = [addCourseStudentDTO];
 
-        UpdateCourseDTO updateCourseDTO = new() {CourseName = newName, CourseInstructors = courseIs, CourseStudents = courseSs};
+        UpdateCourseDTO updateCourseDTO = new() {CourseName = newName};
         Course newCourse = new() {ID = id, CourseName = newName};
 
         _mockRepo.Setup(repo => repo.UpdateCourseAsync(It.IsAny<Course>())).Callback(() => courseList.FirstOrDefault(c => c.ID == newCourse.ID)!.CourseName = newCourse.CourseName);
