@@ -9,7 +9,7 @@ public class CourseRepo : ICourseRepo{
     public async Task<List<Course>> GetAllCoursesAsync() {
         return await _context.Courses.Include(c => c.CourseInstructors).Include(c => c.CourseStudents).ToListAsync();
     }
-    public async Task<Course> GetCourseByIdAsync(int id) {
+    public async Task<Course?> GetCourseByIdAsync(int id) {
         return await _context.Courses.Include(c => c.CourseInstructors).Include(c => c.CourseStudents).FirstOrDefaultAsync(c => c.ID == id);
     }
     public async Task AddCourseAsync(Course course) {

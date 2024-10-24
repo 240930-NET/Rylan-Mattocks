@@ -9,7 +9,7 @@ public class RoleRepo : IRoleRepo{
     public async Task<List<Role>> GetAllRolesAsync() {
         return await _context.Roles.ToListAsync();
     }
-    public async Task<Role> GetRoleByIdAsync(int id) {
+    public async Task<Role?> GetRoleByIdAsync(int id) {
         return await _context.Roles.FirstOrDefaultAsync(r => r.ID == id);
     }
     public async Task AddRoleAsync(Role role) {

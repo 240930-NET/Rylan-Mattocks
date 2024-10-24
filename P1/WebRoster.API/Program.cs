@@ -1,9 +1,12 @@
 using WebRoster.Data;
+using AutoMapper;
 using WebRoster.Models;
 using WebRoster.Services;
 using WebRoster.Controllers;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
+using WebRoster.Utils.Generators;
+using WebRoster.Utils.Mappers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,12 +20,18 @@ builder.Services.AddDbContext<RosterContext>(options => options.UseSqlServer(con
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ICourseRepo, CourseRepo>();
+builder.Services.AddScoped<IRoleRepo, RoleRepo>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+
+builder.Services.AddScoped<UserGenerator>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 builder.Services.AddControllers();
+
 var app = builder.Build();
 
 
@@ -35,7 +44,6 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/", () => "Welcome to WebRosterApplication!");
 
 app.UseRouting();
-app.MapControllers();
-// app.UseEndpoints(endpoints => { _ = endpoints.MapControllers(); });
+app.UseEndpoints(endpoints => { _ = endpoints.MapControllers(); });
 
 app.Run();

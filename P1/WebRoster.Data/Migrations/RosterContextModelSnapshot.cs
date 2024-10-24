@@ -156,10 +156,6 @@ namespace WebRoster.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -189,7 +185,6 @@ namespace WebRoster.Data.Migrations
                         new
                         {
                             ID = 1,
-                            Email = "teacher1",
                             FirstName = "teacher1",
                             LastName = "teacher1",
                             Password = "hashedpassword1",
@@ -199,7 +194,6 @@ namespace WebRoster.Data.Migrations
                         new
                         {
                             ID = 2,
-                            Email = "teacher2",
                             FirstName = "teacher2",
                             LastName = "teacher2",
                             Password = "hashedpassword2",
@@ -209,7 +203,6 @@ namespace WebRoster.Data.Migrations
                         new
                         {
                             ID = 3,
-                            Email = "student1",
                             FirstName = "student1",
                             LastName = "student1",
                             Password = "hashedpassword3",
@@ -232,6 +225,10 @@ namespace WebRoster.Data.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");

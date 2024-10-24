@@ -7,9 +7,10 @@ public class UserRepo : IUserRepo{
         this._context = context;
     }
     public async Task<List<User>> GetAllUsersAsync() {
-        return await _context.Users.Include(u => u.UserDetail).Include(u => u.Role).ToListAsync();
+        //return await _context.Users.Include(u => u.UserDetail).Include(u => u.Role).ToListAsync();
+        return await _context.Users.Include(u => u.Role).ToListAsync();
     }
-    public async Task<User> GetUserByIdAsync(int id) {
+    public async Task<User?> GetUserByIdAsync(int id) {
         return await _context.Users.Include(u => u.UserDetail).Include(u => u.Role).FirstOrDefaultAsync(u => u.ID == id);
     }
     public async Task AddUserAsync(User user) {

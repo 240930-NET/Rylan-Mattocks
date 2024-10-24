@@ -8,6 +8,10 @@
   <ItemGroup>
     <ProjectReference Include="..\WebRoster.Models\WebRoster.Models.csproj" />
     <ProjectReference Include="..\WebRoster.Data\WebRoster.Data.csproj" />
+    <ProjectReference Include="..\WebRoster.Utils\WebRoster.Utils.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
 </Project>
