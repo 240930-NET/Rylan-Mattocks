@@ -1,26 +1,39 @@
+using AutoMapper;
 using WebRoster.Data;
 using WebRoster.Models;
+using WebRoster.Models.DTO;
 namespace WebRoster.Services;
 public class CourseService : ICourseService{
     private readonly ICourseRepo _courseRepo;
-    public CourseService(ICourseRepo courseRepo){
+    private readonly IMapper _mapper;
+    public CourseService(ICourseRepo courseRepo, IMapper mapper){
         this._courseRepo = courseRepo;
+        this._mapper = mapper;
     }
-    public async Task<List<Course>> GetAllCoursesAsync() {
-        return await _courseRepo.GetAllCoursesAsync();
+    public async Task<List<CourseDTO>> GetAllCoursesAsync() {
+        var courses = await _courseRepo.GetAllCoursesAsync();
+        var coursesDTO = _mapper.Map<List<CourseDTO>>(courses);
+        return coursesDTO;
     }
-    public async Task<Course> GetCourseByIdAsync(int id) {
+    public async Task<CourseDTO> GetCourseByIdAsync(int id) {
         Course? course = await _courseRepo.GetCourseByIdAsync(id);
         if (course is null) throw new NullReferenceException();
-        return course;
+        return _mapper.Map<CourseDTO>(course);
     }
-    public async Task AddCourseAsync(Course course) {
+    public async Task AddCourseAsync(AddCourseDTO addCourseDTO) {
+        Course course = _mapper.Map<Course>(addCourseDTO);
         await _courseRepo.AddCourseAsync(course);
     }
-    public async Task UpdateCourseAsync(Course course) {
-        await _courseRepo.UpdateCourseAsync(await GetCourseByIdAsync(course.ID));
+    public async Task<CourseDTO> UpdateCourseAsync(int id, UpdateCourseDTO updateCourseDTO) {
+        Course? course = await _courseRepo.GetCourseByIdAsync(id);
+        if (course is null) throw new NullReferenceException();
+        _mapper.Map(updateCourseDTO, course);
+        await _courseRepo.UpdateCourseAsync(course);
+        return _mapper.Map<CourseDTO>(course);
     }
     public async Task DeleteCourseAsync(int id) {
-        await _courseRepo.DeleteCourseAsync(await GetCourseByIdAsync(id));
+        Course? course = await _courseRepo.GetCourseByIdAsync(id);
+        if (course is null) throw new NullReferenceException();
+        await _courseRepo.DeleteCourseAsync(course);
     }
 }

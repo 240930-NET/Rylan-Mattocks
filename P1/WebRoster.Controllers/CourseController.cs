@@ -1,4 +1,4 @@
-using WebRoster.Models;
+using WebRoster.Models.DTO;
 using WebRoster.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace WebRoster.Controllers;
@@ -24,11 +24,7 @@ public class CourseController : Controller{
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCourseById(int id){
         try{
-            Course course = await _courseService.GetCourseByIdAsync(id);
-            if (course is null) {
-                return NotFound();
-            }
-            return Ok(course);
+            return Ok(await _courseService.GetCourseByIdAsync(id));
         }
         catch{
             return BadRequest();
@@ -36,21 +32,20 @@ public class CourseController : Controller{
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddCourse([FromBody] Course course){
+    public async Task<IActionResult> AddCourse([FromBody] AddCourseDTO addCourseDTO){
         try {
-            await _courseService.AddCourseAsync(course);
-            return CreatedAtAction(nameof(GetCourseById), new {id = course.ID}, course);
+            await _courseService.AddCourseAsync(addCourseDTO);
+            return Created();
         }
         catch {
             return BadRequest();
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateCourse([FromBody] Course course){
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCourse(int id, [FromBody] UpdateCourseDTO updateCourseDTO){
         try {
-            await _courseService.UpdateCourseAsync(course);
-            return NoContent();
+            return Ok(await _courseService.UpdateCourseAsync(id, updateCourseDTO));
         }
         catch {
             return BadRequest();

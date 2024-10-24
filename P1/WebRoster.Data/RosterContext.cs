@@ -59,9 +59,9 @@ public class RosterContext : DbContext{
         );
         // Seed Users
         modelBuilder.Entity<User>().HasData(
-            new User { ID = 1, UserName = "teacher1", Password = "hashedpassword1", RoleID = 1, FirstName = "teacher1", LastName = "teacher1", Email = "teacher1"},
-            new User { ID = 2, UserName = "teacher2", Password = "hashedpassword2", RoleID = 1, FirstName = "teacher2", LastName = "teacher2", Email = "teacher2"},
-            new User { ID = 3, UserName = "student1", Password = "hashedpassword3", RoleID = 2, FirstName = "student1", LastName = "student1", Email = "student1"}
+            new User { ID = 1, UserName = "teacher1", Password = "hashedpassword1", RoleID = 1, FirstName = "teacher1", LastName = "teacher1"},
+            new User { ID = 2, UserName = "teacher2", Password = "hashedpassword2", RoleID = 1, FirstName = "teacher2", LastName = "teacher2"},
+            new User { ID = 3, UserName = "student1", Password = "hashedpassword3", RoleID = 2, FirstName = "student1", LastName = "student1"}
         );
 
         // Seed Courses

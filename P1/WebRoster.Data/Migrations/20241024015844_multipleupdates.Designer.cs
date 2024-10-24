@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebRoster.Data;
 
@@ -11,9 +12,11 @@ using WebRoster.Data;
 namespace WebRoster.Data.Migrations
 {
     [DbContext(typeof(RosterContext))]
-    partial class RosterContextModelSnapshot : ModelSnapshot
+    [Migration("20241024015844_multipleupdates")]
+    partial class multipleupdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

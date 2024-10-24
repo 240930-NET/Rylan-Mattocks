@@ -1,8 +1,6 @@
-using WebRoster.Models;
 using WebRoster.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.AspNetCore.Http;
+using WebRoster.Models.DTO;
 namespace WebRoster.Controllers;
 
 [ApiController]
@@ -26,34 +24,29 @@ public class UserController : Controller{
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id) {
         try {
-            User user = await _userService.GetUserByIdAsync(id);
-            if (user is null) {
-                return NotFound();
-            }
-            return Ok(user);
+            return Ok(await _userService.GetUserByIdAsync(id));
         }
         catch {
             return BadRequest();
         }
     }
     [HttpPost]
-    public async Task<IActionResult> AddUser([FromBody] User user){
+    public async Task<IActionResult> AddUser([FromBody] AddUserDTO addUserDTO){
         try {
-            await _userService.AddUserAsync(user);
-            return CreatedAtAction(nameof(GetUserById), new {id = user.ID}, user);
+            await _userService.AddUserAsync(addUserDTO);
+            return Created();
         }
         catch {
             return BadRequest();
         }
     }
-    [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromBody] User user){
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updateUserDTO){
         try {
-            await _userService.UpdateUserAsync(user);
-            return NoContent();
+            return Ok(await _userService.UpdateUserAsync(id, updateUserDTO));
         }
         catch {
-            return BadRequest();
+            return NotFound();
         }
     }
     [HttpDelete("{id}")]

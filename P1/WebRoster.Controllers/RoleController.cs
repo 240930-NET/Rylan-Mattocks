@@ -3,6 +3,7 @@ using WebRoster.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.AspNetCore.Http;
+using WebRoster.Models.DTO;
 namespace WebRoster.Controllers;
 
 [ApiController]
@@ -35,21 +36,20 @@ public class RoleController : Controller{
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddRole([FromBody] Role role) {
+    public async Task<IActionResult> AddRole([FromBody] AddRoleDTO addRoleDTO) {
         try{
-            await _roleService.AddRoleAsync(role);
-            return CreatedAtAction(nameof(GetRoleById), new {id = role.ID}, role);
+            await _roleService.AddRoleAsync(addRoleDTO);
+            return Created();
         }
         catch{
             return BadRequest();
         }
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateRole([FromBody] Role role) {
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateRole(int id, [FromBody] UpdateRoleDTO updateRoleDTO) {
         try {
-            await _roleService.UpdateRoleAsync(role);
-            return NoContent();
+            return Ok(await _roleService.UpdateRoleAsync(id, updateRoleDTO));
         }
         catch {
             return BadRequest();
